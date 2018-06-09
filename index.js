@@ -1,20 +1,5 @@
 const levenshtein = require('fast-levenshtein');
 
-/*
-function compare(a, b) {
-  return levenshtein.get(a, b, { useCollator: true});
-  //
-  // function makeLen(s, n) {
-  //   return new Array(n).fill(null).map(
-  //     (chr, i) => s.length > i ? ' ' : s[i]
-  //   );
-  // }
-  //
-  // const maxLen = Math.max(a.length, b.length);
-  // return levenshtein(makeLen(a, maxLen), makeLen(b, maxLen));
-}
-*/
-
 const CATEGORIES = [
 'Ведомость держателей подлинников',
 'Ведомость машинных носителей информации',
@@ -180,17 +165,6 @@ const reLoRusChars = /[^а-яё]/g;
 function findCats(s, cats) {
   const ns = s.toLocaleLowerCase().replace(reLoRusChars, ' ').replace(/\s+/g, ' ').replace(/^\s+/, '').replace(/\s+$/, '');
 
-/*
-  function doCat(cats) {
-    return cats
-      .map(cat => ({
-        cat: cat,
-        dist: levenshtein.get(ns, cat.value/!*, { useCollator: false}*!/)
-      }))
-      .sort((a, b) => a.dist - b.dist);
-  }
-*/
-
   const catTransforms = [
     {
       f: cat => cat.toLocaleLowerCase(),
@@ -205,14 +179,6 @@ function findCats(s, cats) {
       k: 1
     }
   ];
-
-  // const catsTransformed = cats.map(cat => {
-  //
-  // });
-  //
-  // const dists = catTransforms
-  //   .map(({f, k}) => cats.map(cat => ({value: f(cat), name: cat, k: k})))
-  //   .map(({value, name, k}) => ({value, name, dist: }));
 
   const catsDists = cats
     .map(cat => {
@@ -230,33 +196,25 @@ function findCats(s, cats) {
   return [
     ns,
     catsDists.slice(0, 5),
-    // doCat(cats.map(cat => ({value: cat.toLocaleLowerCase(), name: cat}))).slice(0, 10),
-    // doCat(cats.map(cat => ({value: catNormBegins(cat), name: cat}))).slice(0, 10),
-    // doCat(cats.map(cat => ({value: catNormAbbr(cat), name: cat}))).slice(0, 10)
-    // cats.map(cat => catTransforms.map(({f, k}) => {
-    //   const tcat = f(cat);
-    //   const dist = levenshtein.get(ns, tcat) * k;
-    //   return { cat, tcat, dist };
-    // })).map(v => JSON.stringify(v))
   ];
 }
 
 const FILENAMES = [
-// 'NULL',
+'NULL',
 '___Отчет  об опытной эксплуатации АИС МО Дирекции.doc',
-// '__Отчет  об опытной эксплуатации АИС Реестр СИ.doc',
-// '_AGU-4.docx',
-// '_Акт_промышленная_1.png',
-// '_Акт_промышленная_2.png',
-// '_АЭК1.doc',
-// '_Инструкция_сменного_персонала_АСУ_МО_2013(учтены_замечания_ГВЦ_20_09_2013).doc',
-// '_Руководство_по_организации_сопровождения.docx',
-// '_ТА1.doc',
-// '_Техническое_задание.doc',
-// '_ТЗ_АС_Модель_2015_07_22.docx',
-// '_Функциональность_4И_v02_NET.docx',
-// '! Вед.РД.doc',
-// '!!!Описан.компл.пр-мм_02.doc',
+'__Отчет  об опытной эксплуатации АИС Реестр СИ.doc',
+'_AGU-4.docx',
+'_Акт_промышленная_1.png',
+'_Акт_промышленная_2.png',
+'_АЭК1.doc',
+'_Инструкция_сменного_персонала_АСУ_МО_2013(учтены_замечания_ГВЦ_20_09_2013).doc',
+'_Руководство_по_организации_сопровождения.docx',
+'_ТА1.doc',
+'_Техническое_задание.doc',
+'_ТЗ_АС_Модель_2015_07_22.docx',
+'_Функциональность_4И_v02_NET.docx',
+'! Вед.РД.doc',
+'!!!Описан.компл.пр-мм_02.doc',
 ];
 
 function show(filenames, cats) {
@@ -279,9 +237,6 @@ function catNormAbbr(cat) {
     .map(word => word.toLocaleLowerCase().replace(reLoRusChars, '').replace(/(.)(.*)/, '$1'))
     .join('');
 }
-
-// console.log(CATEGORIES.map(cat => catNormBegins(cat)));
-// console.log(CATEGORIES.map(cat => catNormAbbr(cat)));
 
 show(
   FILENAMES,
