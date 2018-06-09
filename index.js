@@ -19,7 +19,6 @@ function catNormAbbr(cat) {
 }
 
 function findCats(s, cats) {
-  const ns = s.toLocaleLowerCase().replace(reLoRusChars, ' ').replace(/\s+/g, ' ').replace(/^\s+/, '').replace(/\s+$/, '');
 
   const catTransforms = [
     {
@@ -28,7 +27,7 @@ function findCats(s, cats) {
     },
     {
       f: cat => catNormBegins(cat),
-      k: 1
+      k: 2
     },
     {
       f: cat => catNormAbbr(cat),
@@ -40,7 +39,7 @@ function findCats(s, cats) {
     .map(cat => {
       const dists = catTransforms.map(({ f, k }) => {
         const tcat = f(cat);
-        const dist = levenshtein.get(ns, tcat) * k;
+        const dist = levenshtein.get(s, tcat) * k;
         return { tcat, dist };
       });
       const totalDist = dists.reduce((sum, d) => sum + d.dist, 0);
@@ -48,22 +47,25 @@ function findCats(s, cats) {
     })
     .sort((a, b) => a.totalDist - b.totalDist);
 
-  return [
-    ns,
-    catsDists,
-  ];
+  return catsDists;
 }
 
 function show(filenames, cats) {
   filenames.forEach(filename => {
-    const cats1 = findCats(filename, cats);
+    const normFilename = filename
+      .toLocaleLowerCase()
+      .replace(reLoRusChars, ' ')
+      .replace(/\s+/g, ' ')
+      .replace(/^\s+/, '')
+      .replace(/\s+$/, '');
+    const catsResult = findCats(normFilename, cats);
     console.log(
       filename,
       '\\',
-      cats1[0],
+      normFilename,
       '\n',
-      cats1[1]
-        .slice(0, 5)
+      catsResult
+        .slice(0, 3)
         .map(d => [d.cat, d.totalDist, d.dists.map(dd => `${dd.tcat}: ${dd.dist}`).join('; ')]),
       '\n\n'
     )
@@ -71,6 +73,6 @@ function show(filenames, cats) {
 }
 
 show(
-  FILENAMES.filter(fn => /инструкци/i.test(fn)),
+  FILENAMES/*.slice(0, 100),*/.filter(fn => /техзад/i.test(fn)),
   CATEGORIES
 );
