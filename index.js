@@ -63,6 +63,6 @@ function catNormAbbr(cat) {
 }
 
 show(
-  FILENAMES,
+  FILENAMES.slice(10, 20),
   CATEGORIES
 );
