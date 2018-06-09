@@ -4,6 +4,20 @@ const FILENAMES = require('./filenames.json');
 
 const reLoRusChars = /[^а-яё]/g;
 
+function catNormBegins(cat) {
+  return cat
+    .split(/\s+/)
+    .map(word => word.toLocaleLowerCase().replace(reLoRusChars, '').replace(/(..?.?)(.*)/, '$1'))
+    .join(' ');
+}
+
+function catNormAbbr(cat) {
+  return cat
+    .split(/\s+/)
+    .map(word => word.toLocaleLowerCase().replace(reLoRusChars, '').replace(/(.)(.*)/, '$1'))
+    .join('');
+}
+
 function findCats(s, cats) {
   const ns = s.toLocaleLowerCase().replace(reLoRusChars, ' ').replace(/\s+/g, ' ').replace(/^\s+/, '').replace(/\s+$/, '');
 
@@ -46,20 +60,6 @@ function show(filenames, cats) {
     filename,
     findCats(filename, cats)
   ));
-}
-
-function catNormBegins(cat) {
-  return cat
-    .split(/\s+/)
-    .map(word => word.toLocaleLowerCase().replace(reLoRusChars, '').replace(/(..?.?)(.*)/, '$1'))
-    .join(' ');
-}
-
-function catNormAbbr(cat) {
-  return cat
-    .split(/\s+/)
-    .map(word => word.toLocaleLowerCase().replace(reLoRusChars, '').replace(/(.)(.*)/, '$1'))
-    .join('');
 }
 
 show(
