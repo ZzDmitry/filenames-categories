@@ -46,23 +46,31 @@ function findCats(s, cats) {
       const totalDist = dists.reduce((sum, d) => sum + d.dist, 0);
       return { cat, dists, totalDist };
     })
-    .sort((a, b) => a.totalDist - b.totalDist)
-    .map(v => Object.assign({}, v, {dists: JSON.stringify(v.dists)}));
+    .sort((a, b) => a.totalDist - b.totalDist);
 
   return [
     ns,
-    catsDists.slice(0, 5),
+    catsDists,
   ];
 }
 
 function show(filenames, cats) {
-  filenames.forEach(filename => console.log(
-    filename,
-    findCats(filename, cats)
-  ));
+  filenames.forEach(filename => {
+    const cats1 = findCats(filename, cats);
+    console.log(
+      filename,
+      '\\',
+      cats1[0],
+      '\n',
+      cats1[1]
+        .slice(0, 5)
+        .map(d => [d.cat, d.totalDist, d.dists.map(dd => `${dd.tcat}: ${dd.dist}`).join('; ')]),
+      '\n\n'
+    )
+  });
 }
 
 show(
-  FILENAMES.slice(10, 20),
+  FILENAMES.filter(fn => /инструкци/i.test(fn)),
   CATEGORIES
 );
