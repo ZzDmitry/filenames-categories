@@ -23,15 +23,15 @@ function findCats(s, cats) {
   const catTransforms = [
     {
       f: cat => cat.toLocaleLowerCase(),
-      k: 1
+      k: 10
     },
     {
       f: cat => catNormBegins(cat),
-      k: 2
+      k: 5
     },
     {
       f: cat => catNormAbbr(cat),
-      k: 1
+      k: 10
     }
   ];
 
@@ -51,7 +51,7 @@ function findCats(s, cats) {
 }
 
 function show(filenames, cats) {
-  filenames.forEach(filename => {
+  filenames.forEach(({filename, i}) => {
     const normFilename = filename
       .toLocaleLowerCase()
       .replace(reLoRusChars, ' ')
@@ -60,6 +60,7 @@ function show(filenames, cats) {
       .replace(/\s+$/, '');
     const catsResult = findCats(normFilename, cats);
     console.log(
+      i,
       filename,
       '\\',
       normFilename,
@@ -73,6 +74,6 @@ function show(filenames, cats) {
 }
 
 show(
-  FILENAMES/*.slice(0, 100),*/.filter(fn => /техзад/i.test(fn)),
+  FILENAMES.map((filename, i) => ({filename, i}))/*.slice(0, 100),*/.filter(fn => /телегр/i.test(fn.filename)),
   CATEGORIES
 );
